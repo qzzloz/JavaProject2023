@@ -55,7 +55,7 @@ public class Database {
         }
         tables.add(A);
     }
-
+    //커밋용
 
     // tableName과 테이블명이 같은 테이블을 리턴한다. 없으면 null 리턴.
     public static Table getTable(String tableName) {
