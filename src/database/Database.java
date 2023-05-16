@@ -16,7 +16,6 @@ public class Database {
         while(iter.hasNext()){
             System.out.println(iter.next().getName());
         }
-
     }
 
     /**
@@ -39,13 +38,17 @@ public class Database {
 
             line = r.readLine();
             String h[] = line.split(",");
-            for(int i=0; i<h.length-1; i++){
+            for(int i=0; i<h.length; i++){
                 ColumnImpl col = new ColumnImpl();
                 BufferedReader br = new BufferedReader(new FileReader(csv));
                 col.header = h[i];
-                while((line = br.readLine()) != null){
-                    String arr[] = line.split(",");
-                    col.cell.add(arr[i]);
+                line = br.readLine();
+                while(line != null){
+                    String arr[] = line.split(",", -1);
+//                    System.out.println(arr[i]);
+                    if(arr[i].isEmpty() || arr[i].isBlank()) col.cell.add("null");
+                    else col.cell.add(arr[i]);
+                    line = br.readLine();
                 }
                 A.column.add(col);
             }
@@ -55,10 +58,14 @@ public class Database {
         }
         tables.add(A);
     }
-    //커밋용
 
     // tableName과 테이블명이 같은 테이블을 리턴한다. 없으면 null 리턴.
     public static Table getTable(String tableName) {
+        Iterator<Table> iter = tables.iterator();
+        while(iter.hasNext()){
+            Table tmp = iter.next();
+            if(tmp.getName().equals(tableName)) return tmp;
+        }
         return null;
     }
 

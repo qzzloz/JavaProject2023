@@ -35,7 +35,18 @@ class TableImpl implements Table{
 
     @Override
     public void show() {
-
+        int[] max = new int[column.size()];
+        for (int i = 0; i < column.size(); ++i) {
+            for (int j = 0; j < column.get(0).cell.size(); j++) {
+                if (column.get(i).getValue(j).length() > max[i]) max[i] = column.get(i).getValue(j).length();
+            }
+        }
+        for (int i = 0; i < column.get(0).cell.size(); ++i) {
+            for (int j = 0; j < column.size(); j++) {
+                System.out.print(String.format("%" + max[j] + "s | ", column.get(j).getValue(i)));
+            }
+            System.out.println();
+        }
     }
 
     @Override
