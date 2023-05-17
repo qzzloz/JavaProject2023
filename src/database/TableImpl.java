@@ -73,7 +73,7 @@ class TableImpl implements Table{
             for (int j = 0; j < column.get(0).cell.size(); j++) {
                 if(column.get(i).getValue(j).equals("null")) cnt++;
             }
-            cntNonNull[i] = 8 - cnt;
+            cntNonNull[i] = (getRowCount()-1) - cnt;
         }
 
         //Dtype열
