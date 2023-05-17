@@ -31,7 +31,7 @@ public class Test {
 //        testTable.show();
 
 //        5) 테이블 요약 정보를 출력한다.
-        testTable.describe();
+//        testTable.describe();
 
         Table headTable;
 
@@ -53,14 +53,14 @@ public class Test {
 //        System.out.println("identity test for tail(): " + (testTable.equals(tailTable) ? "Fail" : "Pass"));
 
 //        8) 지정한 마지막 n줄 출력 (새 테이블)
-//        testTable.tail(10).show();
-//        tailTable = testTable.tail(10);
-//        System.out.println("identity test for tail(n): " + (testTable.equals(tailTable) ? "Fail" : "Pass"));
+        testTable.tail(10).show();
+        tailTable = testTable.tail(10);
+        System.out.println("identity test for tail(n): " + (testTable.equals(tailTable) ? "Fail" : "Pass"));
 
         Table selectedRowsTable;
 
 //        9) 지정한 행 인덱스 범위(begin<=, <end)의 서브테이블을 얻는다. (새 테이블), 존재하지 않는 행 인덱시 전달시 예외발생해도 됨.
-//        testTable.selectRows(0, 5).show();
+        testTable.selectRows(0, 5).show();
 //        selectedRowsTable = testTable.selectRows(0, 5);
 //        System.out.println("identity test for selectRows(range): " + (testTable.equals(selectedRowsTable) ? "Fail" : "Pass"));
 

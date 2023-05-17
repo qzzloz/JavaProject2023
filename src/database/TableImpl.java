@@ -1,6 +1,7 @@
 package database;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -80,18 +81,12 @@ class TableImpl implements Table{
         int cntInt=column.size();
         for(int i=0; i<column.size(); i++) {
             try{
-                if (column.get(i).getValue(1).equals("null")){
-                    for(int j=1; j<column.get(0).cell.size(); j++) {
-                        if (!column.get(i).getValue(j).equals("null")) {
-                            int isNumber = Integer.parseInt(column.get(i).getValue(j));
-                            Dtype[i] = "int";
-                            break;
-                        }
+                for(int j=1; j<column.get(0).cell.size(); j++) {
+                    if (!column.get(i).getValue(j).equals("null")) {
+                        int isNumber = Integer.parseInt(column.get(i).getValue(j));
+                        Dtype[i] = "int";
+                        break;
                     }
-                }
-                else{
-                    int isNumber = Integer.parseInt(column.get(i).getValue(1));
-                    Dtype[i] = "int";
                 }
             }
             catch (NumberFormatException e){    //cell이 int가 아닐 때
@@ -117,22 +112,68 @@ class TableImpl implements Table{
 
     @Override
     public Table head() {
-        return null;
+        TableImpl tmp = new TableImpl();
+        for(int i=0; i<column.size(); i++){
+            ColumnImpl tmpCol = new ColumnImpl();
+            for(int j=0; j<6; j++){
+                tmpCol.cell.add(this.column.get(i).getValue(j));
+            }
+            tmp.column.add(tmpCol);
+        }
+        return tmp;
     }
 
     @Override
     public Table head(int lineCount) {
-        return null;
+        TableImpl tmp = new TableImpl();
+        for(int i=0; i<column.size(); i++){
+            ColumnImpl tmpCol = new ColumnImpl();
+            if(lineCount<=getRowCount()){
+                for(int j=0; j<lineCount+1; j++){
+                    tmpCol.cell.add(this.column.get(i).getValue(j));
+                }
+            } else{
+                for(int j=0; j<6; j++){
+                    tmpCol.cell.add(this.column.get(i).getValue(j));
+                }
+            }
+            tmp.column.add(tmpCol);
+        }
+        return tmp;
     }
 
     @Override
     public Table tail() {
-        return null;
+        TableImpl tmp = new TableImpl();
+        for(int i=0; i<column.size(); i++){
+            ColumnImpl tmpCol = new ColumnImpl();
+            tmpCol.cell.add(this.column.get(i).getValue(0));
+            for(int j=getRowCount()-5; j<getRowCount(); j++){
+                tmpCol.cell.add(this.column.get(i).getValue(j));
+            }
+            tmp.column.add(tmpCol);
+        }
+        return tmp;
     }
 
     @Override
     public Table tail(int lineCount) {
-        return null;
+        TableImpl tmp = new TableImpl();
+        for(int i=0; i<column.size(); i++){
+            ColumnImpl tmpCol = new ColumnImpl();
+            if(lineCount<=getRowCount()){
+                tmpCol.cell.add(this.column.get(i).getValue(0));
+                for(int j=getRowCount()-lineCount; j<getRowCount(); j++){
+                    tmpCol.cell.add(this.column.get(i).getValue(j));
+                }
+            } else{
+                for(int j=0; j<getRowCount(); j++){
+                    tmpCol.cell.add(this.column.get(i).getValue(j));
+                }
+            }
+            tmp.column.add(tmpCol);
+        }
+        return tmp;
     }
 
     @Override
