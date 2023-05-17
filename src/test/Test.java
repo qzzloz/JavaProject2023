@@ -28,10 +28,10 @@ public class Test {
         Table testTable = books;
 
 //        4) 테이블 내용을 출력한다.
-        testTable.show();
+//        testTable.show();
 
 //        5) 테이블 요약 정보를 출력한다.
-//        testTable.describe();
+        testTable.describe();
 
         Table headTable;
 

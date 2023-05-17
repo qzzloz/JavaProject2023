@@ -45,7 +45,6 @@ public class Database {
                 line = br.readLine();
                 while(line != null){
                     String arr[] = line.split(",", -1);
-//                    System.out.println(arr[i]);
                     if(arr[i].isEmpty() || arr[i].isBlank()) col.cell.add("null");
                     else col.cell.add(arr[i]);
                     line = br.readLine();

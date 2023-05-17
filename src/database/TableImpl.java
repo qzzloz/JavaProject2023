@@ -51,7 +51,68 @@ class TableImpl implements Table{
 
     @Override
     public void describe() {
+        Class[] interfaces = getClass().getInterfaces();
+        System.out.println("<"+interfaces[0].getName()+"@"+getClass().hashCode()+">");
+        System.out.println("RangeIndex: "+(getRowCount()-1)+" entries, 0 to "+(getRowCount()-2));
+        System.out.println("Data columns (total "+getColumnCount()+" columns): ");
 
+        String[] max = {"#", "Columns", "Non-Null Count", "Dtype"};
+        String[] Dtype = new String[column.size()];
+
+        if(getColumnCount() > 9) max[0] = "10";
+
+        //Column열
+        for(int i=0; i<column.size(); i++){
+            if(column.get(i).getValue(0).length() > max[1].length()) max[1] = column.get(i).getValue(0);
+        }
+
+        //Non-null Count열
+        int[] cntNonNull = new int[column.size()];
+        for (int i = 0; i < column.size(); ++i) {
+            int cnt = 0;
+            for (int j = 0; j < column.get(0).cell.size(); j++) {
+                if(column.get(i).getValue(j).equals("null")) cnt++;
+            }
+            cntNonNull[i] = 8 - cnt;
+        }
+
+        //Dtype열
+        int cntInt=column.size();
+        for(int i=0; i<column.size(); i++) {
+            try{
+                if (column.get(i).getValue(1).equals("null")){
+                    for(int j=1; j<column.get(0).cell.size(); j++) {
+                        if (!column.get(i).getValue(j).equals("null")) {
+                            int isNumber = Integer.parseInt(column.get(i).getValue(j));
+                            Dtype[i] = "int";
+                            break;
+                        }
+                    }
+                }
+                else{
+                    int isNumber = Integer.parseInt(column.get(i).getValue(1));
+                    Dtype[i] = "int";
+                }
+            }
+            catch (NumberFormatException e){    //cell이 int가 아닐 때
+                Dtype[i] = "String";
+            }
+        }
+        for(int i=0; i<column.size(); ++i) {
+            if(Dtype[i].equals("String")) {
+                max[3] = "String";
+                cntInt--;
+            }
+        }
+        //출력
+        System.out.println(String.format("%"+max[0].length()+"s | "+"%"+max[1].length()+"s | "
+                +"%"+max[2].length()+"s | "+"%"+max[3].length()+"s | ", "#", "Column", max[2], "Dtype"));
+
+        for(int i=0; i<column.size(); i++){
+            System.out.println(String.format("%"+max[0].length()+"d | "+"%"+max[1].length()+"s | "
+                    +"%"+max[2].length()+"s | "+"%"+max[3].length()+"s | ", i, column.get(i).getValue(0), cntNonNull[i]+" non-null", Dtype[i]));
+        }
+        System.out.println("dtypes: int("+cntInt+"), String("+(column.size()-cntInt)+")");
     }
 
     @Override
