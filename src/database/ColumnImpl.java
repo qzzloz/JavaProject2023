@@ -49,6 +49,10 @@ class ColumnImpl implements Column{
 
     @Override
     public long getNullCount() {
-        return 0;
+        int cnt=0;
+        for(int i=0; i<cell.size(); i++){
+            if(cell.get(i).equals("null")) cnt++;
+        }
+        return cnt;
     }
 }

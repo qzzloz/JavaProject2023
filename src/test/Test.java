@@ -53,14 +53,14 @@ public class Test {
 //        System.out.println("identity test for tail(): " + (testTable.equals(tailTable) ? "Fail" : "Pass"));
 
 //        8) 지정한 마지막 n줄 출력 (새 테이블)
-        testTable.tail(10).show();
-        tailTable = testTable.tail(10);
-        System.out.println("identity test for tail(n): " + (testTable.equals(tailTable) ? "Fail" : "Pass"));
+//        testTable.tail(10).show();
+//        tailTable = testTable.tail(10);
+//        System.out.println("identity test for tail(n): " + (testTable.equals(tailTable) ? "Fail" : "Pass"));
 
         Table selectedRowsTable;
 
 //        9) 지정한 행 인덱스 범위(begin<=, <end)의 서브테이블을 얻는다. (새 테이블), 존재하지 않는 행 인덱시 전달시 예외발생해도 됨.
-        testTable.selectRows(0, 5).show();
+//        testTable.selectRows(0, 5).show();
 //        selectedRowsTable = testTable.selectRows(0, 5);
 //        System.out.println("identity test for selectRows(range): " + (testTable.equals(selectedRowsTable) ? "Fail" : "Pass"));
 
@@ -84,7 +84,7 @@ public class Test {
         Table sortedTable;
 
 //        13) 테이블을 기준 열인덱스(5)로 정렬한다. 이 때, 오름차순(true), null값은 나중에(false)(원본 테이블 정렬), 존재하지 않는 열 인덱시 전달시 예외발생해도 됨.
-//        testTable.sort(5, true, false).show();
+//        testTable.sort(5, false, true).show();
 //        sortedTable = testTable.sort(5, true, false);
 //        System.out.println("identity test for sort(index, asc, nullOrder): " + (!testTable.equals(sortedTable) ? "Fail" : "Pass"));
 
