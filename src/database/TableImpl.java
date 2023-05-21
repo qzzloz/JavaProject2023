@@ -9,12 +9,102 @@ class TableImpl implements Table{
 
     @Override
     public Table crossJoin(Table rightTable) {
-        return null;
+        String str[][] = new String[(getRowCount()-1)*(rightTable.getRowCount()-1)+1][getColumnCount()+rightTable.getColumnCount()];
+        //0행 라벨명
+        for (int i = 0; i < getColumnCount()+rightTable.getColumnCount(); i++) {
+            if (i < getColumnCount()) {
+                str[0][i] = getName() + "." + getColumn(i).getValue(0);
+            } else {
+                str[0][i] = rightTable.getName() + "." + rightTable.getColumn(i-getColumnCount()).getValue(0);
+            }
+        }
+
+        //왼쪽 테이블 넣기
+        for(int q=1, i=1; q<getRowCount(); q++) {
+            for(int k=1; k<rightTable.getRowCount(); k++) {
+                for (int j = 0; j < getColumnCount(); j++) {
+                    str[i][j] = getColumn(j).getValue(q);
+                }
+                i++;
+            }
+        }
+
+        //오른쪽 테이블 넣기
+        for(int q=1, i=1; q<getRowCount(); q++) {
+            for(int k=1; k<rightTable.getRowCount(); k++) {
+                for (int j = getColumnCount(); j < getColumnCount()+rightTable.getColumnCount(); j++) {
+                    str[i][j] = rightTable.getColumn(j-getColumnCount()).getValue(k);
+                }
+                i++;
+            }
+        }
+
+        TableImpl tmp = new TableImpl();
+        for (int i = 0; i < getColumnCount()+rightTable.getColumnCount(); i++) {
+            ColumnImpl tmpCol = new ColumnImpl();
+            for (int j = 0; j < (getRowCount()-1)*(rightTable.getRowCount()-1)+1; j++) {
+                tmpCol.cell.add(str[j][i]);
+            }
+            tmp.column.add(tmpCol);
+        }
+        return tmp;
     }
 
     @Override
     public Table innerJoin(Table rightTable, List<JoinColumn> joinColumns) {
-        return null;
+        String str[][] = new String[(getRowCount()-1)*(rightTable.getRowCount()-1)+1][getColumnCount()+rightTable.getColumnCount()];
+        //0행 라벨명
+        for (int i = 0; i < getColumnCount()+rightTable.getColumnCount(); i++) {
+            if (i < getColumnCount()) {
+                str[0][i] = getName() + "." + getColumn(i).getValue(0);
+            } else {
+                str[0][i] = rightTable.getName() + "." + rightTable.getColumn(i-getColumnCount()).getValue(0);
+            }
+        }
+
+        //왼쪽 테이블 넣기
+        for(int q=1, i=1; q<getRowCount(); q++) {
+            for(int k=1; k<rightTable.getRowCount(); k++) {
+                for (int j = 0; j < getColumnCount(); j++) {
+                    str[i][j] = getColumn(j).getValue(q);
+                }
+                i++;
+            }
+        }
+
+        //오른쪽 테이블 넣기
+        for(int q=1, i=1; q<getRowCount(); q++) {
+            for(int k=1; k<rightTable.getRowCount(); k++) {
+                for (int j = getColumnCount(); j < getColumnCount()+rightTable.getColumnCount(); j++) {
+                    str[i][j] = rightTable.getColumn(j-getColumnCount()).getValue(k);
+                }
+                i++;
+            }
+        }
+
+        List<Integer> index = new ArrayList<>();    //innerjoin할 str배열의 행 인덱스 저장 용도
+
+        for(int i=1; i<getRowCount(); i++){
+            for(int j=1; j<rightTable.getRowCount(); j++){
+                int cor=0;
+                for(int k=0; k< joinColumns.size(); k++){
+                    if(getColumn(joinColumns.get(k).getColumnOfThisTable()).getValue(i).equals(rightTable.getColumn(joinColumns.get(k).getColumnOfAnotherTable()).getValue(j))){
+                        cor++;
+                    }else break;
+                    if(cor == joinColumns.size()) index.add((i-1)*(rightTable.getRowCount()-1)+j);
+                }
+            }
+        }
+        TableImpl tmp = new TableImpl();
+        for (int i = 0; i < getColumnCount()+rightTable.getColumnCount(); i++) {
+            ColumnImpl tmpCol = new ColumnImpl();
+            tmpCol.cell.add(str[0][i]);
+            for (int j = 0; j < index.size(); j++) {
+                tmpCol.cell.add(str[index.get(j)][i]);
+            }
+            tmp.column.add(tmpCol);
+        }
+        return tmp;
     }
 
     @Override
@@ -618,6 +708,9 @@ class TableImpl implements Table{
 
     @Override
     public Column getColumn(String name) {
+        for(int i=0; i<getColumnCount(); i++){
+            if(getColumn(i).getHeader().equals(name)) return column.get(i);
+        }
         return null;
     }
 }
