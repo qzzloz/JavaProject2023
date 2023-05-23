@@ -100,8 +100,8 @@ public class Test {
 //        crossJoined.show();
 
 //        16) inner join
-        Table innerJoined = testTable.innerJoin(rightTable, List.of(new JoinColumn("author_id", "id")));
-        innerJoined.show();
+//        Table innerJoined = testTable.innerJoin(rightTable, List.of(new JoinColumn("author_id", "id")));
+//        innerJoined.show();
 
         rightTable = translators;
 
@@ -114,10 +114,10 @@ public class Test {
 //        fullOuterJoined.show();
 
 //        19) 조건식을 만족하는 행을 얻는다.
-//        testTable.selectRowsBy("title", (String x) -> x.contains("Your")).show();
-//        testTable.selectRowsBy("author_id", (Integer x) -> x < 15).show();
-//        testTable.selectRowsBy("title", (String x) -> x.length() < 8).show();
-//        testTable.selectRowsBy("translator_id", (Object x) -> x == null).show();
+        testTable.selectRowsBy("title", (String x) -> x.contains("Your")).show();
+        testTable.selectRowsBy("author_id", (Integer x) -> x < 15).show();
+        testTable.selectRowsBy("title", (String x) -> x.length() < 8).show();
+        testTable.selectRowsBy("translator_id", (Object x) -> x == null).show();
 //
 //        ****************************** test for Column ******************************
         int selectedColumnIndex;

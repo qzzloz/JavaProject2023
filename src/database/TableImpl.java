@@ -99,6 +99,7 @@ class TableImpl implements Table{
         for (int i = 0; i < getColumnCount()+rightTable.getColumnCount(); i++) {
             ColumnImpl tmpCol = new ColumnImpl();
             tmpCol.cell.add(str[0][i]);
+            tmpCol.header = str[0][i];
             for (int j = 0; j < index.size(); j++) {
                 tmpCol.cell.add(str[index.get(j)][i]);
             }
@@ -109,12 +110,94 @@ class TableImpl implements Table{
 
     @Override
     public Table outerJoin(Table rightTable, List<JoinColumn> joinColumns) {
-        return null;
+        Table tmp = new TableImpl();
+        tmp = innerJoin(rightTable, joinColumns);
+
+        Set<Integer> incorindex = new HashSet<>();
+        Set<String> leftIndex = new HashSet<>();   //왼쪽 테이블 innerjoin 결과 0열 인덱스
+        for(int i=1; i<tmp.getRowCount(); i++) leftIndex.add(tmp.getColumn(0).getValue(i));
+
+        for(int i=1; i<getRowCount(); i++){
+            if(!leftIndex.contains(String.valueOf(i))) {
+                incorindex.add(i);
+            }
+        }
+
+        TableImpl last = new TableImpl();
+        for (int i = 0; i < getColumnCount()+rightTable.getColumnCount(); i++) {
+            ColumnImpl tmpCol = new ColumnImpl();
+            tmpCol.cell.add(tmp.getColumn(i).getValue(0));
+            for (int j = 1; j < tmp.getRowCount(); j++) {
+                tmpCol.cell.add(tmp.getColumn(i).getValue(j));
+            }
+            Iterator<Integer> iter = incorindex.iterator();
+            if(i<getColumnCount()){
+                while(iter.hasNext()){
+                    tmpCol.cell.add(getColumn(i).getValue(iter.next()));
+                }
+            }
+            else{
+                for(int j=0; j<incorindex.size(); j++) tmpCol.cell.add("null");
+            }
+
+            last.column.add(tmpCol);
+        }
+        return last;
     }
 
     @Override
     public Table fullOuterJoin(Table rightTable, List<JoinColumn> joinColumns) {
-        return null;
+        Table tmp = new TableImpl();
+        tmp = innerJoin(rightTable, joinColumns);
+
+        Set<Integer> incorindex = new HashSet<>();
+        Set<Integer> Rincorindex = new HashSet<>();
+
+        Set<String> leftIndex = new HashSet<>();   //왼쪽 테이블 innerjoin 결과 0열 인덱스
+        Set<String> rightIndex = new HashSet<>();   //오른쪽 테이블 innerjoin 결과 0열 인덱스
+
+        for(int i=1; i<tmp.getRowCount(); i++) leftIndex.add(tmp.getColumn(0).getValue(i));
+        for(int i=1; i<tmp.getRowCount(); i++) rightIndex.add(tmp.getColumn(getColumnCount()).getValue(i));
+
+
+        for(int i=1; i<getRowCount(); i++){
+            if(!leftIndex.contains(String.valueOf(i))) {
+                incorindex.add(i);
+            }
+        }
+
+        for(int i=1; i<rightTable.getRowCount(); i++){
+            if(!rightIndex.contains(rightTable.getColumn(0).getValue(i))) {
+                Rincorindex.add(i);
+            }
+        }
+
+        TableImpl last = new TableImpl();
+        for (int i = 0; i < getColumnCount()+rightTable.getColumnCount(); i++) {
+            ColumnImpl tmpCol = new ColumnImpl();
+            tmpCol.cell.add(tmp.getColumn(i).getValue(0));
+            for (int j = 1; j < tmp.getRowCount(); j++) {
+                tmpCol.cell.add(tmp.getColumn(i).getValue(j));
+            }
+            Iterator<Integer> iter = incorindex.iterator();
+            Iterator<Integer> Riter = Rincorindex.iterator();
+
+            if(i<getColumnCount()){
+                while(iter.hasNext()){
+                    tmpCol.cell.add(getColumn(i).getValue(iter.next()));
+                }
+                for(int j=0; j<Rincorindex.size(); j++) tmpCol.cell.add("null");
+            }
+            else{
+                for(int j=0; j<incorindex.size(); j++) tmpCol.cell.add("null");
+                while(Riter.hasNext()){
+                    tmpCol.cell.add(rightTable.getColumn(i-getColumnCount()).getValue(Riter.next()));
+                }
+            }
+
+            last.column.add(tmpCol);
+        }
+        return last;
     }
 
     @Override
