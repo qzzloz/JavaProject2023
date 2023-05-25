@@ -1,5 +1,6 @@
 package database;
 
+import javax.naming.Name;
 import java.util.*;
 import java.util.function.Predicate;
 
@@ -110,6 +111,11 @@ class TableImpl implements Table{
 
     @Override
     public Table outerJoin(Table rightTable, List<JoinColumn> joinColumns) {
+        for(int i=0; i<getColumnCount(); i++){
+            for(int j=0; j<getRowCount(); j++){
+                if(getColumn(i).getValue(j) == null) column.get(i).setValue(j, "null");
+            }
+        }
         Table tmp = new TableImpl();
         tmp = innerJoin(rightTable, joinColumns);
 
@@ -147,6 +153,11 @@ class TableImpl implements Table{
 
     @Override
     public Table fullOuterJoin(Table rightTable, List<JoinColumn> joinColumns) {
+        for(int i=0; i<getColumnCount(); i++){
+            for(int j=0; j<getRowCount(); j++){
+                if(getColumn(i).getValue(j) == null) column.get(i).setValue(j, "null");
+            }
+        }
         Table tmp = new TableImpl();
         tmp = innerJoin(rightTable, joinColumns);
 
@@ -228,6 +239,13 @@ class TableImpl implements Table{
 
     @Override
     public void describe() {
+        for(int i=0; i<getColumnCount(); i++){
+            for(int j=0; j<getRowCount(); j++){
+                if(getColumn(i).getValue(j) == null) column.get(i).setValue(j, "null");
+            }
+        }
+
+
         Class[] interfaces = getClass().getInterfaces();
         System.out.println("<"+interfaces[0].getName()+"@"+getClass().hashCode()+">");
 //        System.out.println(this.toString());
@@ -430,10 +448,38 @@ class TableImpl implements Table{
 
     @Override
     public <T> Table selectRowsBy(String columnName, Predicate<T> predicate) {
-        return null;
+        List<Integer> cor = new ArrayList<>();
+
+        try{
+            for(int i=1; i<getRowCount(); i++){
+                if(predicate.test((T) getColumn(columnName).getValue(i))) cor.add(i);
+            }
+        }catch (ClassCastException e){
+            for(int i=1; i<getRowCount(); i++){
+                if(predicate.test((T) Integer.valueOf(getColumn(columnName).getValue(i)))) cor.add(i);
+            }
+        }
+
+        TableImpl tmp = new TableImpl();
+        for(int i=0; i<getColumnCount(); i++){
+            ColumnImpl col = new ColumnImpl();
+            col.cell.add(getColumn(i).getValue(0));
+            for(int j=0; j<cor.size(); j++){
+                col.cell.add(getColumn(i).getValue(cor.get(j)));
+            }
+            tmp.column.add(col);
+        }
+
+        return tmp;
     }
+
     @Override
     public Table sort(int byIndexOfColumn, boolean isAscending, boolean isNullFirst) {
+        for(int i=0; i<getColumnCount(); i++){
+            for(int j=0; j<getRowCount(); j++){
+                if(getColumn(i).getValue(j) == null) column.get(i).setValue(j, "null");
+            }
+        }
         String[][] str = new String[getRowCount()-1][getColumnCount()];
 
         int[] nullCnt = new int[(int) column.get(byIndexOfColumn).getNullCount()];

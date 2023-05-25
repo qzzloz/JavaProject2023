@@ -51,7 +51,7 @@ class ColumnImpl implements Column{
     public long getNullCount() {
         int cnt=0;
         for(int i=0; i<cell.size(); i++){
-            if(cell.get(i).equals("null")) cnt++;
+            if(cell.get(i).equals(null)||cell.get(i).equals("null")) cnt++;
         }
         return cnt;
     }

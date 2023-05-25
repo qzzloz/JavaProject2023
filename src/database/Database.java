@@ -45,7 +45,7 @@ public class Database {
                 line = br.readLine();
                 while (line != null) {
                     String arr[] = line.split(",", -1);
-                    if (arr[i].isEmpty() || arr[i].isBlank()) col.cell.add("null");
+                    if (arr[i].isEmpty() || arr[i].isBlank()) col.cell.add(null);
                     else col.cell.add(arr[i]);
                     line = br.readLine();
                 }
@@ -73,6 +73,11 @@ public class Database {
      * @return 정렬된 새로운 Table 객체를 반환한다. 즉, 첫 번째 매개변수 Table은 변경되지 않는다.
      */
     public static Table sort(Table table, int byIndexOfColumn, boolean isAscending, boolean isNullFirst) {
+        for(int i=0; i<table.getColumnCount(); i++){
+            for(int j=0; j<table.getRowCount(); j++){
+                if(table.getColumn(i).getValue(j) == null) table.getColumn(i).setValue(j, "null");
+            }
+        }
         String[][] str = new String[table.getRowCount() - 1][table.getColumnCount()];
 
         int[] nullCnt = new int[(int) table.getColumn(byIndexOfColumn).getNullCount()];
