@@ -89,8 +89,8 @@ public class Test {
 //        System.out.println("identity test for sort(index, asc, nullOrder): " + (!testTable.equals(sortedTable) ? "Fail" : "Pass"));
 
 //        14) 테이블을 기준 열인덱스(5)로 정렬한다. 이 때, 내림차순(false), null값은 앞에(true)(새 테이블), 존재하지 않는 열 인덱시 전달시 예외발생해도 됨.
-//        Database.sort(testTable, 5, false, true).show();
-//        sortedTable = Database.sort(testTable, 5, false, true);
+//        Database.sort(testTable, 5, false, false).show();
+//        sortedTable = Database.sort(testTable, 5, false, false);
 //        System.out.println("identity test for Database.sort(index, asc, nullOrder): " + (testTable.equals(sortedTable) ? "Fail" : "Pass"));
 
         Table rightTable = authors;
@@ -114,7 +114,7 @@ public class Test {
 //        fullOuterJoined.show();
 
 //        19) 조건식을 만족하는 행을 얻는다.
-        testTable.selectRowsBy("title", (String x) -> x.contains("Your")).show();
+//        testTable.selectRowsBy("title", (String x) -> x.contains("Your")).show();
 //        testTable.selectRowsBy("author_id", (Integer x) -> x < 15).show();
 //        testTable.selectRowsBy("title", (String x) -> x.length() < 8).show();
 //        testTable.selectRowsBy("translator_id", (Object x) -> x == null).show();
@@ -134,6 +134,7 @@ public class Test {
 //        testTable.describe();
 //        if (testTable.getColumn(selectedColumnIndex).isNumericColumn())
 //            testTable.getColumn(selectedColumnName).setValue(selectedRowIndex, "Sample");
+//
 //        else
 //            testTable.getColumn(selectedColumnName).setValue(selectedRowIndex, "2023");
 //        System.out.println("Column " + selectedColumnName + " has been changed");
@@ -142,19 +143,19 @@ public class Test {
 //        testTable.describe();
 
 //        21) T getValue(int index, Class<T> t) or String getValue(int index) 호출 전후 비교
-//        System.out.println("*** before getValue ***");
-//        selectedColumnIndex = (int) (Math.random() * testTable.getColumnCount());
-//        selectedRowIndex = (int) (Math.random() * testTable.getColumn(selectedColumnIndex).count());
-//        selectedColumnName = testTable.getColumn(selectedColumnIndex).getHeader();
-//        System.out.println("Selected Column: " + selectedColumnName);
-//        testTable.selectRowsAt(selectedRowIndex).show();
-//        if (testTable.getColumn(selectedColumnIndex).isNumericColumn()) {
-//            // cell 값이 null이면, 예외 발생할 수 있음.
-//            double value = testTable.getColumn(selectedColumnName).getValue(selectedRowIndex, Double.class);
-//            System.out.println("The numeric value in (" + selectedRowIndex + ", " + selectedColumnIndex + ") is " + value);
-//        } else {
-//            String value = testTable.getColumn(selectedColumnName).getValue(selectedRowIndex);
-//            System.out.println("The string value in (" + selectedRowIndex + ", " + selectedColumnIndex + ") is " + value);
-//        }
+        System.out.println("*** before getValue ***");
+        selectedColumnIndex = (int) (Math.random() * testTable.getColumnCount());
+        selectedRowIndex = (int) (Math.random() * testTable.getColumn(selectedColumnIndex).count());
+        selectedColumnName = testTable.getColumn(selectedColumnIndex).getHeader();
+        System.out.println("Selected Column: " + selectedColumnName);
+        testTable.selectRowsAt(selectedRowIndex).show();
+        if (testTable.getColumn(selectedColumnIndex).isNumericColumn()) {
+            // cell 값이 null이면, 예외 발생할 수 있음.
+            double value = testTable.getColumn(selectedColumnName).getValue(selectedRowIndex, Double.class);
+            System.out.println("The numeric value in (" + selectedRowIndex + ", " + selectedColumnIndex + ") is " + value);
+        } else {
+            String value = testTable.getColumn(selectedColumnName).getValue(selectedRowIndex);
+            System.out.println("The string value in (" + selectedRowIndex + ", " + selectedColumnIndex + ") is " + value);
+        }
     }
 }

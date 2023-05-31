@@ -43,6 +43,7 @@ public class Database {
                 BufferedReader br = new BufferedReader(new FileReader(csv));
                 col.header = h[i];
                 line = br.readLine();
+                line = br.readLine();
                 while (line != null) {
                     String arr[] = line.split(",", -1);
                     if (arr[i].isEmpty() || arr[i].isBlank()) col.cell.add(null);
@@ -78,21 +79,21 @@ public class Database {
                 if(table.getColumn(i).getValue(j) == null) table.getColumn(i).setValue(j, "null");
             }
         }
-        String[][] str = new String[table.getRowCount() - 1][table.getColumnCount()];
+        String[][] str = new String[table.getRowCount()][table.getColumnCount()];
 
         int[] nullCnt = new int[(int) table.getColumn(byIndexOfColumn).getNullCount()];
         int[] setOrder = new int[str.length];
         for (int i = 0; i < setOrder.length; i++) setOrder[i] = i;
 
         for (int i = 0; i < table.getColumnCount(); i++) {
-            for (int j = 1; j < table.getRowCount(); j++) {
-                str[j - 1][i] = table.getColumn(i).getValue(j);
+            for (int j = 0; j < table.getRowCount(); j++) {
+                str[j][i] = table.getColumn(i).getValue(j);
             }
         }
 
         int index = 0;
         int startNull = 0, lastNull = str.length - 1;
-        for (int i = 0; i < table.getRowCount() - 1; i++) {
+        for (int i = 0; i < table.getRowCount(); i++) {
             if (str[i][byIndexOfColumn].equals("null")) {
                 nullCnt[index++] = i;
             }
@@ -143,7 +144,7 @@ public class Database {
             lastNull = str.length;  //마지막 null의 인덱스는 lastnull-1
 //            Arrays.sort(copy, 0, startNull);    //
             index = 0;
-            for (int i = 0; i < table.getRowCount() - 1; i++) {
+            for (int i = 0; i < table.getRowCount(); i++) {
                 if (str[i][byIndexOfColumn].equals("null")) {
                     nullCnt[index++] = i;
                 }
@@ -218,7 +219,6 @@ public class Database {
 
             startNull = (int) (str.length - table.getColumn(byIndexOfColumn).getNullCount()); //copy 처음 null의 인덱스
             lastNull = (int) (table.getColumn(byIndexOfColumn).getNullCount());  //str 마지막 null의 인덱스는 lastnull-1
-            for (int i = 0; i < copy.length; i++) System.out.println(str[i][byIndexOfColumn]);
 
             for (int i = 0; i < startNull; i++) {
                 for (int j = lastNull; j < str.length; j++) {
@@ -228,7 +228,7 @@ public class Database {
                     }
                 }
             }
-            for (int i = 0; i < copy.length; i++) System.out.println(setOrder[i]);
+//            for (int i = 0; i < copy.length; i++) System.out.println(setOrder[i]);
 
             for (int i = 0; i < table.getColumnCount(); i++) {
                 String[] tmpcol = new String[str.length];
@@ -244,9 +244,8 @@ public class Database {
         TableImpl tmp = new TableImpl();
         for (int i = 0; i < table.getColumnCount(); i++) {
             ColumnImpl tmpCol = new ColumnImpl();
-            tmpCol.cell.add(table.getColumn(i).getValue(0));
-
-            for (int j = 0; j < table.getRowCount()-1; j++) {
+            tmpCol.header = table.getColumn(i).getHeader();
+            for (int j = 0; j < table.getRowCount(); j++) {
                 tmpCol.cell.add(str[j][i]);
             }
             tmp.column.add(tmpCol);
