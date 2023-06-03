@@ -1,6 +1,5 @@
 package database;
 
-import javax.naming.Name;
 import java.util.*;
 import java.util.function.Predicate;
 
@@ -247,6 +246,20 @@ class TableImpl implements Table{
     }
 
     @Override
+    public boolean equals(Object o){
+//        if (this == o) return true;
+//        if (o == null || getClass() != o.getClass()) return false;
+        TableImpl p = (TableImpl) o;
+        if(name.equals(p.name)) return true;
+        else return false;
+    }
+
+    @Override
+    public int hashCode(){
+        return Objects.hash(name);
+    }
+
+    @Override
     public void describe() {
         for(int i=0; i<getColumnCount(); i++){
             for(int j=0; j<getRowCount(); j++){
@@ -256,7 +269,7 @@ class TableImpl implements Table{
 
 
         Class[] interfaces = getClass().getInterfaces();
-        System.out.println("<"+interfaces[0].getName()+"@"+getClass().hashCode()+">");
+        System.out.println("<"+interfaces[0].getName()+"@"+Integer.toHexString(hashCode())+">");
         System.out.println("RangeIndex: "+getRowCount()+" entries, 0 to "+(getRowCount()-1));
         System.out.println("Data columns (total "+getColumnCount()+" columns): ");
 
