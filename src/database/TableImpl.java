@@ -247,8 +247,8 @@ class TableImpl implements Table{
 
     @Override
     public boolean equals(Object o){
-//        if (this == o) return true;
-//        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
         TableImpl p = (TableImpl) o;
         if(name.equals(p.name)) return true;
         else return false;

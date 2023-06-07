@@ -19,14 +19,18 @@ class ColumnImpl implements Column{
 
     @Override
     public <T extends Number> T getValue(int index, Class<T> t) {
-        if(cell.get(index).equals(null)) return null;
-        if (t == Double.class) {
-            return t.cast(Double.valueOf(cell.get(index)));
-        } else if (t == Long.class) {
-            return t.cast(Long.valueOf(cell.get(index)));
-        } else if (t == Integer.class) {
-            return t.cast( Integer.valueOf(cell.get(index)));
-        } else return null;
+        try {
+            if (cell.get(index).equals(null)) return null;
+            if (t == Double.class) {
+                return t.cast(Double.valueOf(cell.get(index)));
+            } else if (t == Long.class) {
+                return t.cast(Long.valueOf(cell.get(index)));
+            } else if (t == Integer.class) {
+                return t.cast(Integer.valueOf(cell.get(index)));
+            } else return null;
+        } catch (NumberFormatException e){
+            return null;
+        }
     }
 
     @Override
@@ -51,8 +55,16 @@ class ColumnImpl implements Column{
 
     @Override
     public boolean isNumericColumn() {
-        if(getNullCount() == cell.size()) return false;
-        else return true;
+        for (int i = 0; i < cell.size(); i++) {
+            try {
+                if (!cell.get(i).equals("null")) {
+                    int isnum = Integer.parseInt(cell.get(i));
+                }
+            } catch (NumberFormatException e) {
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override
